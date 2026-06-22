@@ -1,0 +1,57 @@
+# Strict Algorithm 1 experiment: PKU-SafeRLHF + Qwen2.5 policy/reference.
+# The trainer code is unchanged; only the dataset pair directory and objective list differ.
+
+seed: 42
+output_dir: outputs/pku_saferlhf_rmo_dpo_qwen2p5_7b
+report_to: none
+run_name: rmo-dpo-pku-saferlhf-qwen2p5-7b-algorithm1
+
+model:
+  policy_name: Qwen/Qwen2.5-7B-Instruct
+  reference_name: Qwen/Qwen2.5-7B-Instruct
+  use_lora: true
+  load_in_4bit: true
+  torch_dtype: bfloat16
+  gradient_checkpointing: true
+  trust_remote_code: true
+  lora:
+    r: 32
+    alpha: 64
+    dropout: 0.05
+    target_modules: [q_proj, k_proj, v_proj, o_proj, gate_proj, up_proj, down_proj]
+
+data:
+  pair_dir: data/pku_saferlhf_pairs
+  eval_pair_dir: data/pku_saferlhf_pairs
+  split: train
+  eval_split: validation
+  objectives: [helpfulness, harmlessness]
+  max_length: 1024
+  max_prompt_length: 512
+  max_response_length: 512
+  per_objective_batch_size: 4
+  dataloader_num_workers: 0
+  system_message: "You are a helpful assistant."
+
+optimizer:
+  name: sgd
+  lr: 5.0e-6
+  max_grad_norm: null
+  max_steps: 5000
+  save_every: 250
+  eval_every: 250
+
+rmo_dpo:
+  beta: [0.1, 0.1]
+  divergence: kl
+  lambda: [0.4, 0.4]
+  eta_init: [0.7, 0.7]
+  eta_lr: 0.02
+  omega_max: 8.0
+  normalize_weights: true
+  conflict: mgda
+  user_weights: [0.5, 0.5]
+  cagrad_c: 0.4
+  mgda_rho: 1.0e-4
+  qp_steps: 60
+  qp_lr: null

@@ -1,0 +1,82 @@
+seed: 42
+output_dir: outputs/noise_sweep_mdga_chi2/noise_0.3_lambda_0.1
+report_to: none
+run_name: rmo-dpo-helpsteer2-noise-mgda-chi2-0.3-lambda-0.1
+model:
+  policy_name: Qwen/Qwen2.5-7B-Instruct
+  reference_name: Qwen/Qwen2.5-7B-Instruct
+  use_lora: true
+  load_in_4bit: true
+  torch_dtype: bfloat16
+  gradient_checkpointing: true
+  trust_remote_code: true
+  lora:
+    r: 32
+    alpha: 64
+    dropout: 0.05
+    target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+data:
+  pair_dir: data/helpsteer2_pairs_noisy_0.3
+  eval_pair_dir: data/helpsteer2_pairs
+  split: train
+  eval_split: validation
+  objectives:
+  - helpfulness
+  - correctness
+  - coherence
+  - complexity
+  - verbosity
+  max_length: 1024
+  max_prompt_length: 512
+  max_response_length: 512
+  per_objective_batch_size: 1
+  dataloader_num_workers: 0
+  system_message: You are a helpful assistant.
+optimizer:
+  name: sgd
+  lr: 5.0e-06
+  max_grad_norm: null
+  max_steps: 5000
+  save_every: 250
+  eval_every: 250
+rmo_dpo:
+  beta:
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  divergence: chi2
+  lambda:
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  - 0.1
+  eta_init:
+  - 0.7
+  - 0.7
+  - 0.7
+  - 0.7
+  - 0.7
+  eta_lr: 0.02
+  omega_max: 8.0
+  normalize_weights: true
+  conflict: mgda
+  user_weights:
+  - 0.25
+  - 0.25
+  - 0.2
+  - 0.15
+  - 0.15
+  cagrad_c: 0.4
+  mgda_rho: 0.0001
+  qp_steps: 60
+  qp_lr: null

@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rmo-dpo-helpsteer2"
+version = "0.1.0"
+description = "Reference implementation for distributionally robust multi-objective DPO on HelpSteer2."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "RMO-DPO reference implementation"}]
+dependencies = [
+  "torch>=2.3",
+  "transformers>=4.44",
+  "datasets>=2.20",
+  "accelerate>=0.33",
+  "peft>=0.12",
+  "bitsandbytes>=0.43; platform_system != 'Darwin'",
+  "pyyaml>=6.0",
+  "tqdm>=4.66",
+  "numpy>=1.26",
+  "matplotlib>=3.8",
+  "safetensors>=0.4",
+  "wandb>=0.17",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "scripts", "tests"]
