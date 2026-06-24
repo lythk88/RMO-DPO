@@ -1,7 +1,7 @@
 seed: 42
-output_dir: outputs/noise_sweep_mdga_chi2/noise_0.0_lambda_0.1
+output_dir: /home/namn1/rmo-dpo-helpsteer2-strict/outputs/noise_sweep_mdga_chi2/noise_0.0_lambda_0.1_b_16
 report_to: none
-run_name: rmo-dpo-helpsteer2-noise-mgda-chi2-0.0-lambda-0.1
+run_name: rmo-dpo-helpsteer2-noise-mgda-chi2-0.0-lambda-0.1-b-16
 model:
   policy_name: Qwen/Qwen2.5-7B-Instruct
   reference_name: Qwen/Qwen2.5-7B-Instruct
